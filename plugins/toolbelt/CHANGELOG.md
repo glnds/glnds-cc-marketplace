@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `creating-github-issues` skill — produce well-defined GitHub issues (single, epic, or sub-issues)
+- `gh-create-issue` skill — produce well-defined GitHub issues (single, epic, or sub-issues)
   with label discovery and a TDD plan for implementation-ready issues.
 
 ## [0.1.0] - 2026-04-17

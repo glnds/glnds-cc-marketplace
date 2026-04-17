@@ -21,7 +21,7 @@ claude plugin install toolbelt@claude-marketplace
 
 | Skill | Description |
 | --- | --- |
-| `creating-github-issues` | Create well-defined GitHub issues (single, epic, or sub-issues) with labels and an optional TDD implementation plan. Superpowers-friendly. |
+| `gh-create-issue` | Create well-defined GitHub issues (single, epic, or sub-issues) with labels and an optional TDD implementation plan. Superpowers-friendly. |
 
 ## Prerequisites
 
