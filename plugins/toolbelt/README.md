@@ -8,13 +8,13 @@ My collection of day-to-day tools to get the job done.
 Register the marketplace (one-time):
 
 ```text
-claude plugin marketplace add glnds/claude-marketplace
+claude plugin marketplace add glnds/glnds-cc-marketplace
 ```
 
 Install the plugin:
 
 ```text
-claude plugin install toolbelt@claude-marketplace
+claude plugin install toolbelt@glnds-cc-marketplace
 ```
 
 ## Skills
