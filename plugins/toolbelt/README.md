@@ -30,6 +30,15 @@ Fix Claude Code Action review feedback on the current PR — both inline threads
 comments, with severity-based prioritisation and auto-reply. Supports `--all`, `--skip-tests`,
 `--inline`, `--comments`, `--resolve`, `--dry-run`, and `--pr <number>`.
 
+### `deep-research`
+
+Multi-agent orchestrator that produces a long-form narrative research report (3000-8000 words)
+grounded in the local codebase AND the current web. Dispatches 5 specialised subagents across a
+7-phase workflow (plan → codebase recon → user-approved outline → parallel web workers → single
+synthesis → citation pass → validation). Output written to `./research/{date}-{slug}-report.md`.
+Not for quick lookups — spends tokens deliberately (~200K-700K per run). Optional flag:
+`--no-code` to skip codebase reconnaissance.
+
 ## Prerequisites
 
 - Claude Code CLI with plugin support

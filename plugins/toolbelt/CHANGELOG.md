@@ -6,6 +6,20 @@ All notable changes to the `toolbelt` plugin are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-04-17
+
+### Added
+
+- `deep-research` skill — multi-agent orchestrator producing long-form narrative research reports
+  (3000-8000 words) grounded in the local codebase and the current web. 7-phase workflow:
+  planner → codebase reconnaissance → user-approved outline → parallel web workers (3-5, hard cap
+  20) → single-agent synthesis → citation attribution → validation. Output written to
+  `./research/{date}-{slug}-report.md` on disk, not chat.
+- Five plugin subagents backing the skill: `research-planner`, `code-reconnaissance`,
+  `research-worker`, `research-synthesizer`, `citation-agent`.
+- Validation scripts: `validate_report.py` (structure, word count, anti-plan-mode discipline),
+  `verify_citations.py` (URL liveness + DOI resolution).
+
 ## [0.3.0] - 2026-04-17
 
 ### Added
