@@ -22,6 +22,7 @@ claude plugin install toolbelt@claude-marketplace
 | Skill | Description |
 | --- | --- |
 | `gh-create-issue` | Create well-defined GitHub issues (single, epic, or sub-issues) with labels and an optional TDD implementation plan. Superpowers-friendly. |
+| `gh-fix-pr-review` | Fix Claude Code Action review feedback on the current PR — both inline threads and PR comments, with severity-based prioritisation and auto-reply. |
 
 ## Prerequisites
 
