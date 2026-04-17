@@ -19,7 +19,9 @@ claude plugin install toolbelt@claude-marketplace
 
 ## Skills
 
-No skills yet — this plugin is a scaffold. Skills will land here as they are built.
+| Skill | Description |
+| --- | --- |
+| `creating-github-issues` | Create well-defined GitHub issues (single, epic, or sub-issues) with labels and an optional TDD implementation plan. Superpowers-friendly. |
 
 ## Prerequisites
 
