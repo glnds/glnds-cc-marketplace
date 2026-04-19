@@ -6,6 +6,21 @@ All notable changes to the `toolbelt` plugin are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-04-19
+
+### Added
+
+- `adversarial-plan-review` skill — destructive, diagnosis-only pre-flight review of an
+  implementation plan, designed to sit between Superpowers' `writing-plans` and
+  `subagent-driven-development`. Runs as a dispatched subagent in a fresh context with only the
+  plan and spec paths as input (context starvation keeps it adversarial, not sympathetic). Applies
+  three priority-ordered attack angles — Structural, Operational, Scope — and emits a severity-
+  tagged findings table plus a binary verdict (`PASS` / `NEEDS REWORK` / `NEEDS HUMAN`). No
+  remediation, no rewrites, findings capped at 20. One-pass-per-session rule enforced at two
+  levels (main agent in `SKILL.md`, reviewer in verdict rules) so the skill cannot drift into a
+  constructive-reviewer loop. Ships with `review-prompt.md` (verbatim reviewer prompt) and a
+  `README.md` containing the ready-to-paste CLAUDE.md routing block.
+
 ## [0.5.0] - 2026-04-17
 
 ### Changed

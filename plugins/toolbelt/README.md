@@ -39,6 +39,18 @@ synthesis → citation pass → validation). Output written to `./research/{date
 Not for quick lookups — spends tokens deliberately (~200K-700K per run). Optional flag:
 `--no-code` to skip codebase reconnaissance.
 
+### `adversarial-plan-review`
+
+Destructive, diagnosis-only pre-flight review of an implementation plan, built for the seam
+between Superpowers' `writing-plans` and `subagent-driven-development`. Runs as a dispatched
+subagent in a fresh context with only the plan and spec paths as input — the context starvation
+is what keeps the reviewer adversarial instead of sympathetic. Applies three priority-ordered
+attack angles (Structural → Operational → Scope) and emits a severity-tagged findings table plus
+a binary verdict: `PASS`, `NEEDS REWORK`, or `NEEDS HUMAN`. No remediation, no rewrites, findings
+capped at 20. One-pass-per-session rule enforced in both `SKILL.md` and the reviewer's verdict
+rules so it cannot drift into a constructive-reviewer loop. See the skill's README for the
+ready-to-paste CLAUDE.md routing block.
+
 ### `code-audit`
 
 Read-only deep audit of a repository or subtree. Produces a severity-ranked Markdown report
