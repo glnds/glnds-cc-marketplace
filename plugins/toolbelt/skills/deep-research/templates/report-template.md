@@ -51,7 +51,16 @@ TODOs, no plan framing.}
 
 ## Sources
 
-{Appended by citation-agent in Phase 6. Not written by the synthesizer. Flat numbered list:
-[1] Author/Org. Title. URL. Accessed YYYY-MM-DD.
-[2] ...
+{Appended by citation-agent in Phase 6. Not written by the synthesizer. Flat numbered list.
+Sources may be URLs, DOIs, CloudWatch metric queries, or commit SHAs — whatever primary
+evidence backs the claim. Example of a mixed Sources section from a `locus=ops` run:
+
+1. AWS CloudWatch — `AWS/Lambda` `Duration` sum, `FunctionName=attracr-essentia-orchestrator`,
+   2026-04-11T00:00:00Z / 2026-04-12T00:00:00Z, `period=86400`.
+2. git — commit 43b6a3d, `infrastructure/backend-ephemeral.yaml:551-580`, 2026-04-12.
+3. Author/Org. Title. URL. Accessed YYYY-MM-DD.
+4. ...
+
+`verify_citations.py` checks URL/DOI liveness for the URL-bearing entries and reports non-URL
+entries (metric queries, commit SHAs) as "skipped — non-URL primary source".
 }

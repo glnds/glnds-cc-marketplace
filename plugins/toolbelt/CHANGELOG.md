@@ -6,6 +6,49 @@ All notable changes to the `toolbelt` plugin are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.1] - 2026-04-20
+
+### Added
+
+- `deep-research`: evidence-locus classifier — planner now emits a second axis (`web`,
+  `web-grounded`, `ops`, `codebase`, `hybrid`) alongside the shape classification, decided by a
+  six-axis scoring rule (temporal shape, metric vocab, anomaly/attribution, resource/tool vocab,
+  named artefact, probe-shaped verb). Full rules and overrides in
+  `references/methodology.md` § Evidence-locus classifier. Phase 4 dispatches the right worker
+  type for the locus instead of always fanning out to web workers.
+- `deep-research`: new sibling subagent `toolbelt:ops-probe` for `locus=ops` queries. Same
+  output contract as `research-worker` (`worker-{N}.md`, trailing `Status: COMPLETE`), different
+  tool surface — read-only AWS CLI + `aws logs start-query` + `git log` + `Read`/`Grep`. OODA
+  moves prioritised: CloudWatch metrics → Logs Insights (sub-cap 3 per probe) → git correlation
+  → code justification. Budget 15 commands hard cap, 10 target, 5 min; max 2 probes per run.
+  Read-only contract pasted verbatim into the subagent so it is self-contained (subagents do
+  not inherit `~/.claude/CLAUDE.md`). Mutating commands refused with `Status: BLOCKED`.
+- `deep-research`: plan-mode adapter — the skill detects a `Plan mode is active` system-reminder
+  and uses `ExitPlanMode` as the Phase 3 approval gate instead of fighting the harness. Plan
+  file becomes the home of `plan.md`; Phases 1–2 (read-only) run unchanged; approval via
+  `ExitPlanMode` gates Phase 4+.
+- `deep-research`: self-disclosure blocks — the skill prints its tool access surface before any
+  token-expensive phase. Moment 1 (plan mode active) goes into the plan file alongside the
+  outline; Moment 2 (plan mode inactive) goes to chat before Phase 1.
+- `deep-research`: `--locus=web|web-grounded|ops|codebase|hybrid` flag overrides the classifier
+  when the user already knows where the evidence lives.
+- `deep-research`: `--dry-run` flag stops after Phase 2 regardless of plan-mode state — same
+  "see before you commit" guarantee that plan mode provides, usable outside plan mode.
+- `deep-research`: `--yes` flag skips the Phase 3 approval gate when running outside plan mode.
+
+### Changed
+
+- `deep-research`: `scripts/verify_citations.py` tolerates non-URL entries in `## Sources`
+  (metric queries, commit SHAs, other ops primary evidence). Non-URL entries are reported as
+  "skipped — non-URL primary source" rather than failed. Exit 0 when there are non-URL entries
+  only and no URLs to liveness-check.
+- `deep-research`: `templates/report-template.md` Sources example now shows a mixed section
+  with metric queries, commit SHAs, and URLs to reflect the ops-locus reports the skill can
+  now produce.
+- `deep-research`: architecture table in `SKILL.md` adds `toolbelt:ops-probe` as a sibling of
+  `toolbelt:research-worker`. Common-failures table adds two entries: noisy-web-workers-for-ops
+  and plan-mode-blocking-orchestrator-writes.
+
 ## [0.7.0] - 2026-04-19
 
 ### Added

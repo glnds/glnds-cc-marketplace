@@ -24,6 +24,95 @@ Workers are instructed to **start with short broad queries and progressively nar
 team found that agents default to overly specific queries that return zero results. "jwt library
 vulnerabilities 2024" beats "CVE-2024-12345 impact on jsonwebtoken v9.0.2 async verify path".
 
+## Evidence-locus classifier
+
+Shape alone (straightforward / comparison / complex) decides worker **count**. It does not decide
+where the evidence lives. A "compare Lambda duration of 2026-04-11 with 2026-04-19" query is
+shape=`comparison` but its evidence lives entirely in CloudWatch and git — dispatching web workers
+returns generic "Lambda cost optimization" noise. The planner emits a second axis, `evidence_locus`,
+that routes Phase 4 to the right retrieval surface.
+
+Score the query against these six axes. **If ≥ 2 axes fire → `ops`. If exactly 1 fires and the
+topic is otherwise generic → `hybrid`. Zero axes → `web` or `web-grounded` as before. A sole
+external-topic override forces `web`; a sole codebase-scope override forces `codebase`.**
+
+**Axis 1 — Temporal shape.** Two dates (ISO, `Apr 11`, `11 April`), a date range, relative time
+(`yesterday`, `last week`, `Q1`, `during the outage`), a narrow window (`14:00–16:00`), or two
+release tags / deploy markers.
+
+**Axis 2 — Metric vocabulary.** `duration`, `latency`, `p50/p95/p99`, `throughput`, `error rate`,
+`errors`, `invocations`, `throttles`, `cold starts`, `cost`, `spend`, `bill`, `CPU`, `memory`,
+`iops`, `connections`, `queue depth`, `backlog`, `lag`, `saturation`, `availability`, `uptime`,
+`success rate`.
+
+**Axis 3 — Anomaly / attribution.** `spike`, `jumped`, `dropped`, `climbed`, `regressed`,
+`slower`, `faster`, `higher`, `lower`, `plummeted`, `flatlined`, `degraded`, `outage`,
+`incident`, `anomaly`, `off-baseline`, `explained by`, `caused by`, `correlated with`,
+`why did`, `what changed`.
+
+**Axis 4 — Resource / tool vocab.** AWS (`Lambda`, `RDS`, `DynamoDB`, `SQS`, `S3`, `API Gateway`,
+`CloudFront`, `EventBridge`, `Step Functions`, `ECS`, `EKS`, named CloudWatch alarms); GCP
+(`Cloud Run`, `Pub/Sub`, `BigQuery`, `Cloud SQL`); Azure (`Functions`, `Cosmos`, `App Service`);
+observability (`Datadog`, `Grafana`, `Prometheus`, `Sentry`, `Honeycomb`, `Splunk`, `ELK`,
+`New Relic`); k8s (`pod`, `deployment`, `HPA`, `kubectl`, `OOMKilled`); DB (`slow query`,
+`deadlock`, `lock contention`, `replica lag`, `connection pool`, `WAL`); queue (`DLQ`,
+`visibility timeout`, `redrive`).
+
+**Axis 5 — Named artefact.** A specific function / table / queue / dashboard / alarm / pipeline
+name that looks like it maps to infra (`attracr-essentia-orchestrator`, `orders-api`,
+`checkout-dead-letter`, `grafana.internal/d/…`); stack or environment names (`prod`,
+`staging-eu`); deploy / release IDs (`v2.47.0`, commit SHA).
+
+**Axis 6 — Probe-shaped verb.** `trace`, `dive`, `attribute`, `localise`, `isolate`, `bisect`,
+`correlate`, `aggregate`, `profile`, `drill into`, `break down by`, `group by`, `stats over`;
+diagnostic framings like "find the slowest `{resource}`" or "find the N `{resources}` with most
+`{metric}`".
+
+Overrides and tie-breakers:
+
+- **Sole external-topic override** — if the query names a CVE ID, RFC number, library version
+  diff, vendor announcement, W3C/IETF draft, `npm`/`PyPI`/`crates.io` package name with a version
+  number, locus = `web` regardless of other axes.
+- **Sole codebase-scope override** — if the query contains "in our codebase", "in this repo", or
+  names a file path / function name without any metric vocabulary, locus = `codebase` (recon
+  alone; no Phase 4).
+- **User override** — the slash command accepts `--locus=web|web-grounded|ops|codebase|hybrid`
+  to force a path when the classifier guesses wrong.
+- **Explain the decision** — the planner's `plan.md` must include an `evidence_locus:` line of
+  the form `evidence_locus: ops (axes fired: temporal, metric, named-artefact)` so the user can
+  disagree explicitly before Phase 4 dispatches.
+
+Locus → retrieval worker mapping:
+
+| `evidence_locus` | Phase 4 retrieval |
+| ---------------- | ----------------- |
+| `web` | N × `toolbelt:research-worker` (web) |
+| `web-grounded` | N × `toolbelt:research-worker` (web) + recon |
+| `codebase` | No Phase 4; synthesizer reads `recon.md` alone |
+| `ops` | N × `toolbelt:ops-probe` (new) + recon |
+| `hybrid` | 1 × `toolbelt:ops-probe` + 1 × `toolbelt:research-worker` + recon |
+
+## Ops-probe OODA loop
+
+The ops-probe subagent reuses the OODA loop skeleton but its moves are different. The four
+prioritised moves, in order:
+
+1. `aws cloudwatch get-metric-statistics` / `get-metric-data` across the window named in the
+   query, grouped by whatever dimension the query specifies (per-function, per-table, per-API).
+   This is the cheapest move that delivers the headline delta.
+2. If the delta is large and localised, `aws logs start-query` against the relevant log group
+   with a Logs Insights query that bins by hour or by a handler / operation dimension. Logs
+   Insights is expensive and slow — cap at 3 per probe.
+3. `git log --since=… --until=… -- <paths>` constrained to the files the recon brief flagged, to
+   correlate the inflection date with a specific commit.
+4. `Read` or `Grep` into the files those commits touched for a 2–3 sentence justification that
+   connects metric delta, commit, and code change.
+
+Stopping criteria: same three triggers as research-worker (sufficiency, budget, diminishing
+returns) plus a hard-block trigger when a probe would require a mutating command — emit
+`Status: BLOCKED` instead of calling the command. See `stopping-criteria.md` for the ops-probe
+budget caps.
+
 ## Scaling rules (planner's classifier)
 
 The planner classifies the query into one of three shapes. This determines worker count.
@@ -84,6 +173,11 @@ battle-tested against BrowseComp-style evaluations. Deviate only with a specific
 
 ## Worker-prompt structure
 
+The same structural template is filled in per sub-question for **both** research-worker and
+ops-probe. Only the `<tool_guidance>` and `<source_quality>` blocks swap out — the other sections
+(objective, codebase_context, output_contract, budget) are identical, and the orchestrator treats
+the two worker types interchangeably for Phase 5 synthesis.
+
 Every worker receives the same structural template, filled in per sub-question:
 
 ```text
@@ -133,6 +227,8 @@ The skill is designed for token-intensive, long-form, grounded research. It is w
 - Quick factual lookups — use `WebSearch` directly.
 - "What does this code do?" — use `Explore` or ask plainly.
 - Pure planning tasks — use the `Plan` subagent or superpowers' brainstorming.
+- Single-CLI-command ops questions — "what was my Lambda duration yesterday" answers from one
+  `aws cloudwatch get-metric-statistics` call; use the AWS CLI directly, not a research pipeline.
 - Things the user has not asked for explicitly — this burns hundreds of thousands of tokens.
 
 If you are tempted to use this skill for a 30-second question, you are using the wrong tool.

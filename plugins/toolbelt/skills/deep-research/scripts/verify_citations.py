@@ -26,6 +26,7 @@ USER_AGENT = "deep-research-citation-verifier/1.0"
 
 URL_RE = re.compile(r"https?://[^\s)\]>]+")
 DOI_RE = re.compile(r"\b10\.\d{4,9}/[^\s)\]]+", re.IGNORECASE)
+ENTRY_RE = re.compile(r"^\s*(?:\d+\.|\[\d+\]|[-*])\s+\S")
 
 
 def extract_sources_section(text: str) -> str | None:
@@ -33,21 +34,32 @@ def extract_sources_section(text: str) -> str | None:
     return match.group(1) if match else None
 
 
-def extract_references(sources_text: str) -> list[tuple[int, str]]:
-    """Return list of (line-number-within-section, url-or-doi-uri)."""
-    refs: list[tuple[int, str]] = []
+def extract_references(
+    sources_text: str,
+) -> tuple[list[tuple[int, str]], list[tuple[int, str]]]:
+    """Return (url_refs, non_url_entries).
+
+    url_refs   — numbered source entries that carry a URL or DOI; checked for liveness.
+    non_url_entries — numbered source entries without a URL/DOI (metric queries, commit SHAs,
+                      other ops primary evidence). Reported but not liveness-checked.
+    """
+    url_refs: list[tuple[int, str]] = []
+    non_url_entries: list[tuple[int, str]] = []
     for i, line in enumerate(sources_text.splitlines(), start=1):
         stripped = line.strip()
         if not stripped:
             continue
         url_match = URL_RE.search(stripped)
         if url_match:
-            refs.append((i, url_match.group(0).rstrip(".,;")))
+            url_refs.append((i, url_match.group(0).rstrip(".,;")))
             continue
         doi_match = DOI_RE.search(stripped)
         if doi_match:
-            refs.append((i, f"https://doi.org/{doi_match.group(0).rstrip('.,;')}"))
-    return refs
+            url_refs.append((i, f"https://doi.org/{doi_match.group(0).rstrip('.,;')}"))
+            continue
+        if ENTRY_RE.match(line):
+            non_url_entries.append((i, stripped))
+    return url_refs, non_url_entries
 
 
 def check_url(url: str) -> tuple[str, bool, str]:
@@ -107,17 +119,27 @@ def main(path: Path) -> int:
         print(f"error: no '## Sources' section in {path}", file=sys.stderr)
         return 2
 
-    refs = extract_references(sources)
-    if not refs:
-        print(f"warning: '## Sources' is empty or contains no URLs/DOIs", file=sys.stderr)
+    url_refs, non_url_entries = extract_references(sources)
+    if not url_refs and not non_url_entries:
+        print("warning: '## Sources' section is empty", file=sys.stderr)
         return 1
 
-    print(f"checking {len(refs)} sources from {path}...")
+    if non_url_entries:
+        print(f"{len(non_url_entries)} non-URL sources (metric queries, commit SHAs, etc.):")
+        for line, text in non_url_entries:
+            snippet = text if len(text) <= 100 else text[:97] + "..."
+            print(f"  SKIP (non-URL)        {snippet}")
+
+    if not url_refs:
+        print(f"\nno URL/DOI sources to verify; {len(non_url_entries)} non-URL entries accepted")
+        return 0
+
+    print(f"checking {len(url_refs)} URL/DOI sources from {path}...")
     failures: list[tuple[int, str, str]] = []
     successes: list[tuple[str, str]] = []
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
-        futures = {pool.submit(check_url, url): (line, url) for line, url in refs}
+        futures = {pool.submit(check_url, url): (line, url) for line, url in url_refs}
         for fut in as_completed(futures):
             line, url = futures[fut]
             _, ok, detail = fut.result()
@@ -133,12 +155,12 @@ def main(path: Path) -> int:
 
     if failures:
         print(
-            f"\n{len(failures)} of {len(refs)} sources failed liveness check",
+            f"\n{len(failures)} of {len(url_refs)} URL sources failed liveness check",
             file=sys.stderr,
         )
         return 1
 
-    print(f"\nall {len(refs)} sources live")
+    print(f"\nall {len(url_refs)} URL sources live")
     return 0
 
 

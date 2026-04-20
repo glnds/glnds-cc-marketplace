@@ -22,6 +22,32 @@ A worker stops its OODA loop when **any** of these fires:
 The worker **must** call `complete_task` when any of these fires. Continuing past a stop-condition
 is a prompt-compliance failure.
 
+## Ops-probe caps
+
+An ops-probe worker is a sibling of research-worker with a different tool surface. Its stopping
+criteria mirror those above with two additions:
+
+- **Command budget**: max 15 `aws` / `git` commands per probe (same as web's 15 tool calls).
+  Target 10. Minimum 5.
+- **Logs Insights sub-cap**: max 3 `aws logs start-query` calls per probe. Logs Insights is
+  expensive and slow — 3 is enough to bin by hour, by handler, and by operation; more is
+  diminishing returns.
+- **Probes per run**: max 2 ops-probes dispatched per run (unlike web workers, probes are rarely
+  disjoint enough to warrant 5+). The classifier that justifies a third probe should instead be
+  rephrasing the sub-question.
+
+Source quality, ops analogue:
+
+- **Primary source** = a metric datapoint from CloudWatch / CloudWatch Logs, or a commit SHA
+  with its patch.
+- **Secondary source** = a dashboard screenshot, a stale runbook, a summarised incident postmortem.
+- **Avoid** = any "we think it might be" claim without a datapoint or a commit to back it up.
+
+If the probe hits a command the read-only contract forbids (any `create-*`, `update-*`,
+`delete-*`, `put-*`, `modify-*`, `start-*`, `stop-*`, `terminate-*`, `run-*`, `invoke-*`, …),
+the probe writes `Status: BLOCKED` with the blocked command embedded and the orchestrator
+surfaces the block for human review. Do not attempt to work around the contract.
+
 ## Per-wave stopping criteria (orchestrator)
 
 After Phase 4 workers report complete, the orchestrator decides whether to dispatch a second wave
