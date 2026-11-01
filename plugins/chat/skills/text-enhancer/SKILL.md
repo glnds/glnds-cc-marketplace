@@ -41,7 +41,7 @@ First, determine the text type and intended context:
 Before enhancing, gather relevant context:
 
 **For Obsidian notes:**
-- Use `obsidian_simple_search` or `obsidian_complex_search` to find similar notes
+- Use `search_simple` or `search_query` (JsonLogic) to find similar notes
 - Look for related concepts, previous writing on the topic, or style patterns
 - Use findings to maintain consistency with existing notes
 
@@ -171,9 +171,9 @@ When text contains AWS service references:
 When enhancing Obsidian notes:
 
 ```
-1. obsidian_simple_search: Find notes with similar keywords
-2. obsidian_complex_search: Find notes with specific patterns/tags
-3. obsidian_get_file_contents: Read similar notes for context
+1. search_simple: Find notes with similar keywords
+2. search_query: Find notes with specific patterns/tags (JsonLogic)
+3. vault_read: Read similar notes for context
 4. Use findings to maintain consistency across notes
 ```
 

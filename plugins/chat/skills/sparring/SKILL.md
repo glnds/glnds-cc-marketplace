@@ -29,9 +29,12 @@ Use Obsidian MCP tools to research the user's notes:
 
 ```
 Search strategies:
-- Start with simple_search for the main topic and related concepts
-- Use complex_search for finding patterns (e.g., all notes with specific tags)
-- Check recent_changes to understand what's currently top of mind
+- Start with search_simple for the main topic and related concepts
+- Use search_query (JsonLogic) for patterns, e.g. all notes with a tag:
+  {"in": ["ai/agentic", {"var": "tags"}]}
+- Use search_query on stat.mtime (epoch ms) for recently modified notes,
+  to see what's currently top of mind
+- Read promising hits with vault_read
 - Look for related periodic notes (daily, weekly) for temporal context
 ```
 
