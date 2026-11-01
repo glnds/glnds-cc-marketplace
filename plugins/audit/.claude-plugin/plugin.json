@@ -1,7 +1,7 @@
 {
   "name": "audit",
   "description": "Read-only repository audit: severity-ranked findings report for a local checkout.",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "author": {
     "name": "Gert Leenders",
     "email": "leenders.gert@gmail.com"

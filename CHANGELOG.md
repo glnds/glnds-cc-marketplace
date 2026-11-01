@@ -7,6 +7,13 @@ All notable changes to the plugins in this marketplace. Entries before 0.8.0 are
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [audit 0.8.1] - 2026-11-01
+
+### Fixed
+
+- `code-audit` description no longer contains angle brackets (`audit-SLUG-YYYYMMDD.md`);
+  claude.ai rejected them as XML tags on sync.
+
 ## [chat 1.1.0] - 2026-11-01
 
 ### Changed
