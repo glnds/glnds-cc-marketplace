@@ -2,7 +2,7 @@
 name: fix-pr-review
 description: Use when the user asks to fix PR review feedback, address Claude Code Action review comments, resolve unresolved review threads, handle inline review suggestions, or work through review issues tagged CRITICAL/HIGH/MEDIUM/LOW on the current PR. Covers both GraphQL review threads and REST PR issue comments, picks the highest severity by default, implements and verifies fixes, then replies on the review.
 argument-hint: [issue_number] [--all] [--skip-tests] [--inline] [--comments] [--resolve] [--dry-run] [--pr <number>]
-allowed-tools: Bash(gh:*) Bash(git:*) Bash(make:*) Read Write Edit
+allowed-tools: Bash(gh:*) Bash(git:*) Bash(mise:*) Read Write Edit
 disable-model-invocation: true
 ---
 
@@ -27,7 +27,7 @@ User input is passed as `$ARGUMENTS`.
 - ALWAYS check both sources before reporting "no issues" unless scoped by `--inline` / `--comments`.
 - ALWAYS filter review comments by bot author, not by prose alone.
 - ALWAYS check if a recommendation is already implemented before editing.
-- ALWAYS honour the project's own test command (`make test`, scripts in `package.json`, etc.).
+- ALWAYS honour the project's own test command (`mise run test`, scripts in `package.json`, etc.).
 
 ## Arguments
 
@@ -218,11 +218,13 @@ Skip only when `--skip-tests` is passed (warn the user this bypasses safety).
 
 Detect the test command in this order:
 
-1. `Makefile` with a `test` target → `make test`
-2. `package.json` `scripts.test` → `npm test` (or `pnpm` / `yarn` if lockfile indicates)
-3. `pyproject.toml` / `pytest.ini` → `pytest` (prefer `uv run pytest` if `uv.lock` exists)
-4. `go.mod` → `go test ./...`
-5. Fallback: ask the user for the project's test command.
+1. mise `test` task (`mise.toml` / `.mise.toml`) → `mise run test` (bare: no pipes, so the
+   quality gate records the result)
+2. `Makefile` with a `test` target → `make test`
+3. `package.json` `scripts.test` → `npm test` (or `pnpm` / `yarn` if lockfile indicates)
+4. `pyproject.toml` / `pytest.ini` → `pytest` (prefer `uv run pytest` if `uv.lock` exists)
+5. `go.mod` → `go test ./...`
+6. Fallback: ask the user for the project's test command.
 
 **If tests fail:**
 

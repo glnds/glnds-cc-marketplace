@@ -35,12 +35,11 @@ automatically**; the skills then also reach chat, Cowork and Claude Code as `<na
 | Plugin | Install key | Description |
 | --- | --- | --- |
 | [research](./plugins/research/) | `research@glnds-cc-marketplace` | Multi-agent deep research: long-form reports grounded in the codebase, the web and live ops evidence. |
-| [audit](./plugins/audit/) | `audit@glnds-cc-marketplace` | Read-only repository audits: severity-ranked findings reports for a local checkout or an uploaded zip. |
+| [audit](./plugins/audit/) | `audit@glnds-cc-marketplace` | Read-only repository audit: severity-ranked findings report for a local checkout. |
 | [plan-review](./plugins/plan-review/) | `plan-review@glnds-cc-marketplace` | Adversarial, diagnosis-only review of implementation plans before autonomous execution. |
 | [gh-tools](./plugins/gh-tools/) | `gh-tools@glnds-cc-marketplace` | GitHub workflow skills: create well-defined issues and fix PR review feedback. |
-| [notes](./plugins/notes/) | `notes@glnds-cc-marketplace` | Obsidian-backed skills: make notes, spar on ideas, enhance text. |
-| [prompting](./plugins/prompting/) | `prompting@glnds-cc-marketplace` | Prompting techniques such as verbalized sampling. |
 | [ty-lsp](./plugins/ty-lsp/) | `ty-lsp@glnds-cc-marketplace` | Python language server (ty) for type checking and code intelligence. |
+| [chat](./plugins/chat/) | `chat@glnds-cc-marketplace` | Skills for claude.ai chat and Cowork: Obsidian notes, sparring, text polish, verbalized sampling, zip repo audits. |
 <!-- rumdl-enable MD013 -->
 
 ## Development

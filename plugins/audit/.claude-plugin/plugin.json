@@ -1,10 +1,17 @@
 {
   "name": "audit",
-  "description": "Read-only repository audits: severity-ranked findings reports for a local checkout or an uploaded zip.",
+  "description": "Read-only repository audit: severity-ranked findings report for a local checkout.",
   "version": "0.8.0",
-  "author": { "name": "Gert Leenders", "email": "leenders.gert@gmail.com" },
+  "author": {
+    "name": "Gert Leenders",
+    "email": "leenders.gert@gmail.com"
+  },
   "homepage": "https://github.com/glnds/glnds-cc-marketplace/tree/master/plugins/audit",
   "repository": "https://github.com/glnds/glnds-cc-marketplace",
   "license": "Apache-2.0",
-  "keywords": ["audit","security","review"]
+  "keywords": [
+    "audit",
+    "security",
+    "review"
+  ]
 }

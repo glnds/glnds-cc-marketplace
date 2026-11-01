@@ -1,6 +1,6 @@
 # audit
 
-Read-only repository audits: severity-ranked findings reports for a local checkout or an uploaded zip.
+Read-only repository audit: severity-ranked findings report for a local checkout.
 
 ## Installation
 
@@ -25,12 +25,6 @@ Falls back to ripgrep heuristics when scanners (`gitleaks`, `trivy`, `semgrep`, 
 `infracost`, `checkov`) are absent.
 
 **Flags:** `--scope=security|resilience|cost|architecture|docs|monitoring|all`.
-
-### `audit:repo-audit`
-
-Audit a repository uploaded as a zip archive (claude.ai chat) and produce a
-Markdown findings report where each finding maps to a GitHub issue. Use `code-audit` for a
-local checkout in Claude Code.
 
 ## Changelog
 

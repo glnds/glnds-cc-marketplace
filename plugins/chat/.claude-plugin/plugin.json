@@ -1,0 +1,19 @@
+{
+  "name": "chat",
+  "description": "Skills for claude.ai chat and Cowork: Obsidian notes, sparring, text polish, verbalized sampling, zip repo audits.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Gert Leenders",
+    "email": "leenders.gert@gmail.com"
+  },
+  "homepage": "https://github.com/glnds/glnds-cc-marketplace/tree/master/plugins/chat",
+  "repository": "https://github.com/glnds/glnds-cc-marketplace",
+  "license": "Apache-2.0",
+  "keywords": [
+    "obsidian",
+    "notes",
+    "writing",
+    "prompting",
+    "claude-ai"
+  ]
+}

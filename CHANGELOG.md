@@ -18,9 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `notes` 1.0.0: `make-note`, `sparring`, `text-enhancer` (moved from claude.ai uploads).
-- `prompting` 1.0.0: `verbalized-sampling` (moved from claude-config).
-- `audit`: `repo-audit` (moved from claude.ai uploads).
+- `chat` 1.0.0, for claude.ai chat and Cowork: `make-note`, `sparring`, `text-enhancer`,
+  `repo-audit` (moved from claude.ai uploads) and `verbalized-sampling` (moved from
+  claude-config). Needs claude.ai connectors, so leave it disabled in Claude Code.
+- `gh-tools`: `fix-pr-review` runs a mise `test` task first and may run `mise` instead of
+  `make`.
 - `ty-lsp` 1.0.0: ty language server (moved from a machine-local marketplace).
 - Plugin metadata (`homepage`, `repository`, `keywords`), marketplace `description` and
   `category`.
