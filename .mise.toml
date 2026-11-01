@@ -1,0 +1,30 @@
+[tools]
+claude = "2.1.316"
+hk = "2.9.0"
+pkl = "0.32.2"
+rumdl = "0.3.0"
+ruff = "0.17.2"
+trufflehog = "3.99.7"
+
+[settings]
+lockfile = true
+
+[tasks.setup]
+description = "Install pinned tools + hk git hooks"
+run = ["mise install", "hk install"]
+
+[tasks.validate]
+description = "Validate the marketplace and every plugin manifest (warnings fail)"
+run = """
+set -e
+claude plugin validate --strict .
+for p in plugins/*/; do claude plugin validate --strict "$p"; done
+"""
+
+[tasks.lint]
+description = "Lint Markdown and Python"
+run = ["rumdl check .", "ruff check .", "ruff format --check ."]
+
+[tasks.check]
+description = "Everything CI runs"
+depends = ["validate", "lint"]

@@ -1,0 +1,10 @@
+{
+  "name": "research",
+  "description": "Multi-agent deep research: long-form reports grounded in the codebase, the web and live ops evidence.",
+  "version": "0.8.0",
+  "author": { "name": "Gert Leenders", "email": "leenders.gert@gmail.com" },
+  "homepage": "https://github.com/glnds/glnds-cc-marketplace/tree/master/plugins/research",
+  "repository": "https://github.com/glnds/glnds-cc-marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["research","report","subagents","aws"]
+}

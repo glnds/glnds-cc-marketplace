@@ -1,0 +1,10 @@
+{
+  "name": "ty-lsp",
+  "description": "Python language server (ty) for type checking and code intelligence.",
+  "version": "1.0.0",
+  "author": { "name": "Gert Leenders", "email": "leenders.gert@gmail.com" },
+  "homepage": "https://github.com/glnds/glnds-cc-marketplace/tree/master/plugins/ty-lsp",
+  "repository": "https://github.com/glnds/glnds-cc-marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["python","lsp","ty"]
+}

@@ -1,14 +1,52 @@
 {
   "name": "glnds-cc-marketplace",
+  "description": "Personal Claude Code plugins by glnds.",
   "owner": {
     "name": "Gert Leenders",
     "email": "leenders.gert@gmail.com"
   },
   "plugins": [
     {
-      "name": "toolbelt",
-      "source": "./plugins/toolbelt",
-      "description": "My collection of day-to-day tools to get the job done."
+      "name": "research",
+      "source": "./plugins/research",
+      "description": "Multi-agent deep research: long-form reports grounded in the codebase, the web and live ops evidence.",
+      "category": "productivity"
+    },
+    {
+      "name": "audit",
+      "source": "./plugins/audit",
+      "description": "Read-only repository audits: severity-ranked findings reports for a local checkout or an uploaded zip.",
+      "category": "security"
+    },
+    {
+      "name": "plan-review",
+      "source": "./plugins/plan-review",
+      "description": "Adversarial, diagnosis-only review of implementation plans before autonomous execution.",
+      "category": "development"
+    },
+    {
+      "name": "gh-tools",
+      "source": "./plugins/gh-tools",
+      "description": "GitHub workflow skills: create well-defined issues and fix PR review feedback.",
+      "category": "development"
+    },
+    {
+      "name": "notes",
+      "source": "./plugins/notes",
+      "description": "Obsidian-backed skills: make notes, spar on ideas, enhance text.",
+      "category": "productivity"
+    },
+    {
+      "name": "prompting",
+      "source": "./plugins/prompting",
+      "description": "Prompting techniques such as verbalized sampling.",
+      "category": "productivity"
+    },
+    {
+      "name": "ty-lsp",
+      "source": "./plugins/ty-lsp",
+      "description": "Python language server (ty) for type checking and code intelligence.",
+      "category": "development"
     }
   ]
 }

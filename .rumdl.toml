@@ -1,0 +1,5 @@
+[global]
+exclude = ["plugins/*/skills/**"]
+
+[MD013]
+line-length = 100
