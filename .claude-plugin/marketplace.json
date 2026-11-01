@@ -41,6 +41,12 @@
       "source": "./plugins/chat",
       "description": "Skills for claude.ai chat and Cowork: Obsidian notes, sparring, text polish, verbalized sampling, zip repo audits.",
       "category": "productivity"
+    },
+    {
+      "name": "deploy",
+      "source": "./plugins/deploy",
+      "description": "Ship and verify: commit, push, watch CI and CodePipeline, check the live resources, report evidence.",
+      "category": "development"
     }
   ]
 }

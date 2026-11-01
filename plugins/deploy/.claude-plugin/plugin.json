@@ -1,0 +1,19 @@
+{
+  "name": "deploy",
+  "description": "Ship and verify: commit, push, watch CI and CodePipeline, check the live resources, report evidence.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Gert Leenders",
+    "email": "leenders.gert@gmail.com"
+  },
+  "homepage": "https://github.com/glnds/glnds-cc-marketplace/tree/master/plugins/deploy",
+  "repository": "https://github.com/glnds/glnds-cc-marketplace",
+  "license": "Apache-2.0",
+  "keywords": [
+    "deploy",
+    "ci",
+    "codepipeline",
+    "aws",
+    "verification"
+  ]
+}

@@ -40,6 +40,7 @@ automatically**; the skills then also reach chat, Cowork and Claude Code as `<na
 | [gh-tools](./plugins/gh-tools/) | `gh-tools@glnds-cc-marketplace` | GitHub workflow skills: create well-defined issues and fix PR review feedback. |
 | [ty-lsp](./plugins/ty-lsp/) | `ty-lsp@glnds-cc-marketplace` | Python language server (ty) for type checking and code intelligence. |
 | [chat](./plugins/chat/) | `chat@glnds-cc-marketplace` | Skills for claude.ai chat and Cowork: Obsidian notes, sparring, text polish, verbalized sampling, zip repo audits. |
+| [deploy](./plugins/deploy/) | `deploy@glnds-cc-marketplace` | Ship and verify: commit, push, watch CI and CodePipeline, check the live resources, report evidence. |
 <!-- rumdl-enable MD013 -->
 
 ## Development

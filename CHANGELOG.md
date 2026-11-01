@@ -7,6 +7,13 @@ All notable changes to the plugins in this marketplace. Entries before 0.8.0 are
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [deploy 1.0.0] - 2026-11-01
+
+### Added
+
+- `deploy` plugin with `ship`: commit, push, watch CI and CodePipeline for the SHA, verify the
+  changed resources live, report evidence. Read-only on AWS; reverts only after confirmation.
+
 ## [0.8.0] - 2026-11-01
 
 ### Changed
