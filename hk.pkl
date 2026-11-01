@@ -7,6 +7,11 @@ local pre_commit_steps = new Mapping<String, Step> {
         check = "rumdl check {{files}}"
         fix = "rumdl check --fix {{files}}"
     }
+    ["ruff"] {
+        glob = Regex(#"\.py$"#)
+        check = "ruff check {{files}} && ruff format --check {{files}}"
+        fix = "ruff check --fix {{files}} && ruff format {{files}}"
+    }
     ["trufflehog"] {
         check = "trufflehog filesystem {{files}} --no-update --fail"
     }
@@ -18,6 +23,13 @@ hooks {
         stash = "git"
         steps {
             ...pre_commit_steps
+        }
+    }
+    ["pre-push"] {
+        steps {
+            ["validate"] {
+                check = "mise run validate"
+            }
         }
     }
     ["check"] {
